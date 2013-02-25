@@ -1,0 +1,30 @@
+#!/bin/bash
+
+# There's nothing to see here.  This script is used to execute the example code
+# without having to modify it directly with usernames, passwords, appIds or
+# appKeys.
+
+if [[ ! -f ~/.example_code.env ]]; then
+    echo "Can't find ~/.example_code.env"
+    exit 1
+fi
+
+. ~/.example_code.env
+
+script="$1"
+
+if [[ -z "$script" ]]; then
+    echo "usage: ${0##*/} <script file>"
+    exit 1
+elif [[ ! -x "$script" ]]; then
+    echo "$script ain't an executable"
+    exit 1
+fi
+
+e=executable.$$
+sed -e "s/<your appId>/$myAppId/" \
+    -e "s/<your appKey>/$myAppKey/" \
+    -e "s/<your username>/$myUsername/" \
+    -e "s/<your password>/$myPassword/" "$script" > $e
+ruby $e
+rm -f $e

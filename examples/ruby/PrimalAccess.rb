@@ -19,7 +19,6 @@ class PrimalAccess
   base_uri 'https://data.primal.com'
   # Uncomment this next line to see what HTTParty is doing
   # debug_output $stderr
-  headers 'Primal-Version' => 'latest'
 
   #
   # Constructor for the PrimalAccess class
@@ -29,9 +28,12 @@ class PrimalAccess
   # with that user
   #
   def initialize(appId, appKey, username, password)
-    headers 'Primal-App-ID' => appId
-    headers 'Primal-App-Key' => appKey
     @headers = {
+      :headers => {
+        'Primal-App-ID' => appId,
+        'Primal-App-Key' => appKey,
+        'Primal-Version' => 'latest',
+      },
       :basic_auth => {
         :username => username,
         :password => password
