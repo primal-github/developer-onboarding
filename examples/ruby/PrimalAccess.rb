@@ -81,17 +81,33 @@ class PrimalAccess
       :status => 'complete',
       :timeOut => 300 }.merge(opts)
     })
+    uri = "/#{storage}#{source}#{topic}"
     while (count < 5)
-      response = self.class.get("/#{storage}#{source}#{topic}",
-                                options)
+      response = self.class.get(uri, options)
       code = response.code
       body = response.body
-      if response.code == 404
+      #
+      # 400 - bad request
+      # 401 - application not authorized to access the user's account
+      # 403 - application not authorized to use Primal
+      # 404 - interest network not found
+      #
+      if code >= 400 && code <= 404
         break
-      elsif response.code != 200
+      #
+      # 429 - application has reached its request limit for the moment
+      #
+      elsif code == 429
+        # Sleep for 10 seconds
+        sleep 10
         count += 1
-      else
+      #
+      # 200 - success
+      #
+      elsif code == 200
         break
+      else
+        abort "Received unexpected response code (#{code}) for GET #{uri}"
       end
     end
     return code, body

@@ -32,6 +32,34 @@ $interests = [
 #
 $interestForFiltering = "/technology"
  
+# 
+# Returns an unordered list of the matched topics and their URL
+# identifiers back in to Primal.
+# 
+# dcCollectionEntry - The JSON object pulled from the dc:collection.
+#   skosCollection - The JSON object represented by
+#   skos:ConceptScheme/skos:Collection.
+# Returns the unordered list of matched topics or the empty string
+#   if no topics can be found.
+# 
+def getSubjectTags(dcCollectionEntry, skosCollection)
+  # Get the subjects from the dcCollectionEntry
+  subjects = dcCollectionEntry['dc:subject']
+ 
+  # If they're defined
+  if subjects
+    # Convert the subject links to subject labels
+    strings = subjects.collect { |subj|
+      # Look up the object in the skos block and extract the label
+      skosCollection[subj]['skos:prefLabel']
+    }
+    # Make it look nice
+    strings.join(", ")
+  else
+    ""
+  end
+end
+ 
 #
 # We're not going to do anything special here.  You know how to manipulate
 # the results to get some bits and pieces of information that are important
@@ -39,18 +67,21 @@ $interestForFiltering = "/technology"
 #
 def processJSON(source, json)
   # Grab the array from dc:collection
-  collection = json['dc:collection']
+  dcCollection = json['dc:collection']
+  # Grab the skos block
+  skosCollection = json['skos:ConceptScheme']['skos:Collection']
   # Convert that array to an array of strings
-  data = collection.collect { |dict|
+  data = dcCollection.collect { |dict|
     "  score: #{dict['primal:contentScore']}\n" +
     "  title: #{dict['dc:title']}\n" +
+    "  subjects: #{getSubjectTags(dict, skosCollection)}\n" +
     "  link: #{dict['dc:identifier']}\n\n"
   }
   puts "From #{source}:"
   puts data
   # Return the top scoring item's first subject
-  if collection.first['dc:subject']
-      collection.first['dc:subject'].first
+  if dcCollection.first['dc:subject']
+      dcCollection.first['dc:subject'].first
   else
       ""
   end
@@ -71,7 +102,7 @@ def filterBySource(source)
       # Process the result
       processJSON(source, json)
   else
-      puts "Something went wrong #{code} -- #{body}"
+      abort "Filtering request failed (#{code}). Message: #{body}"
   end
 end
 
@@ -116,5 +147,5 @@ if code == 200
     # Process the result
     processJSON("@News", json)
 else
-    puts "Something went wrong #{code} -- #{body}"
+    abort "Something went wrong #{code} -- #{body}"
 end
