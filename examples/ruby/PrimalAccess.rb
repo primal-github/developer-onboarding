@@ -53,9 +53,38 @@ class PrimalAccess
   # an error.
   #
   def postNewTopic(storage, topic)
-    response = self.class.post("/#{storage}@Everything#{topic}",
-                               @headers)
-    return response.code, response.body
+    count = 0
+    code = 400
+    body = ''
+    while (count < 5)
+      response = self.class.post("/#{storage}@Everything#{topic}",
+                                 @headers)
+      code = response.code
+      body = response.body
+      #
+      # 400 - bad request
+      # 401 - application not authorized to access the user's account
+      # 403 - application not authorized to use Primal
+      #
+      if code >= 400 && code <= 403
+        break
+      #
+      # 429 - application has reached its request limit for the moment
+      #
+      elsif code == 429
+        # Sleep for 10 seconds
+        sleep 10
+        count += 1
+      #
+      # 200 - success
+      #
+      elsif code == 201
+        break
+      else
+        abort "Received unexpected response code (#{code}) for POST #{uri}"
+      end
+    end
+    return code, body
   end
 
   #
