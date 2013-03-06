@@ -27,8 +27,7 @@ primal = PrimalAccess.new("<your appId>", "<your appKey>",
 #
 #   https://data.primal.com/travel/adventure?maxContentCount=20
 #
-code, body = primal.filterContent("traveldemo", "@Everything",
-                                  "/travel/adventure", {
+code, body = primal.filterContent("/travel/adventure", {
                                     :maxContentCount => 20
                                   })
  

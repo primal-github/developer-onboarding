@@ -18,7 +18,7 @@ class PrimalAccess
   include HTTParty
   base_uri 'https://data.primal.com'
   # Uncomment this next line to see what HTTParty is doing
-  debug_output $stderr
+  # debug_output $stderr
 
   #
   # Constructor for the PrimalAccess class
@@ -44,21 +44,19 @@ class PrimalAccess
   #
   # POSTs a new topic to Primal in order to seed that topic.
   #
-  # The 'storage' and 'topic' parameters will be used to
-  # construct a POST URL that looks like
-  # "/storage@Everything/topic"
+  # The 'topic' parameter will be used to construct a POST URL
+  # that looks like "/topic"
   #
   # Returns two values: the response code and the body.
   # Anything but a response code of 201 is to be considered
   # an error.
   #
-  def postNewTopic(storage, topic)
+  def postNewTopic(topic)
     count = 0
     code = 400
     body = ''
     while (count < 5)
-      response = self.class.post("/#{storage}@Everything#{topic}",
-                                 @headers)
+      response = self.class.post("/#{topic}", @headers)
       code = response.code
       body = response.body
       #
@@ -81,28 +79,28 @@ class PrimalAccess
       elsif code == 201
         break
       else
-        abort "Received unexpected response code (#{code}) for POST #{uri}"
+        abort "Received unexpected response code (#{code}) for POST /#{topic}"
       end
     end
     return code, body
   end
 
   #
-  # Uses the pre-existing topic to filter the source of content
-  # through the interest network located in storage.
+  # Uses the pre-existing topic to filter the default source
+  # of content through the interest network defined by the topic.
   #
-  # The given parameters will be used to construct a GET URL
-  # that looks like "/storage@source/topic"
+  # The given parameter will be used to construct a GET URL
+  # that looks like "/topic"
   #
   # You can pass a dictionary of optional arguments that will
   # be merged in to the query parameters, if you wish.
-  # e.g. { :minScore => 0.7 }
+  # e.g. { :minScore => 0.7 } or { :source => MyDataSource }
   #
   # Returns two values: the response code, and the body.
   # If successful (i.e. a response code of 200) then the body
   # will be the JSON payload of the filtered content.
   #
-  def filterContent(storage, source, topic, opts = {})
+  def filterContent(topic, opts = {})
     count = 0
     code = 400
     body = ''
@@ -110,9 +108,8 @@ class PrimalAccess
       :status => 'complete',
       :timeOut => 300 }.merge(opts)
     })
-    uri = "/#{storage}#{source}#{topic}"
     while (count < 5)
-      response = self.class.get(uri, options)
+      response = self.class.get("/#{topic}", options)
       code = response.code
       body = response.body
       #
@@ -136,7 +133,7 @@ class PrimalAccess
       elsif code == 200
         break
       else
-        abort "Received unexpected response code (#{code}) for GET #{uri}"
+        abort "Received unexpected response code (#{code}) for GET /#{topic}"
       end
     end
     return code, body
@@ -144,7 +141,7 @@ class PrimalAccess
 
   #
   # This is a convenience method that will POST the topic to
-  # Primal and then filter the source of content through the
+  # Primal and then filter the default source of content through the
   # resulting interest network.
   #
   # The response from this method is a bit less clear than using
@@ -156,10 +153,10 @@ class PrimalAccess
   # successful then the body contains the JSON payload of the
   # filtered content.
   #
-  def postThenFilter(storage, source, topic)
-    code, body = postNewTopic(storage, topic)
+  def postThenFilter(topic, opts = {})
+    code, body = postNewTopic(topic)
     if code == 201
-      code, body = filterContent(storage, source, topic)
+      code, body = filterContent(topic, opts)
     end
     return code, body
   end

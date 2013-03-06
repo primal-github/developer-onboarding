@@ -15,9 +15,6 @@ require 'json'
 $primal = PrimalAccess.new("<your appId>", "<your appKey>",
                           "<your username>", "<your password>")
  
-# We'll hard-code these specific sources to make things simpler
-$sources = [ "@News", "@Videos", "@Web", "@Everything" ]
-
 # 
 # Returns an unordered list of the matched topics and their URL
 # identifiers back in to Primal.
@@ -75,16 +72,16 @@ end
 # given source in this one function.  The returned data is exactly what was
 # returned from processJSON()
 #
-def postAndFilter(topic, source)
+def postAndFilter(topic)
   print "Expanding #{topic}..."
   STDOUT.flush
-  code, body = $primal.postNewTopic("iterativedemo", topic)
+  code, body = $primal.postNewTopic(topic)
   # If successful
   if code == 201
     puts " success."
-    print "Filtering #{topic} against #{source}..."
+    print "Filtering content against #{topic}..."
     STDOUT.flush
-    code, body = $primal.filterContent("iterativedemo", source, topic)
+    code, body = $primal.filterContent(topic)
     if code == 200
       puts " success."
       # Convert the payload to JSON
@@ -145,18 +142,6 @@ def getUserIndex(message, max)
   end
 end
 
-#
-# Returns one of the entries from the $sources array depending on the user's
-# specification
-#
-def getSourceFromUser()
-  puts
-  $sources.each_index { |i|
-    puts "#{i}) #{$sources[i]}"
-  }
-  $sources[getUserIndex("Which source do you want to use?", $sources.length)]
-end
-
 # ====================
 # Main
 # ====================
@@ -164,14 +149,12 @@ end
 # Start the ball rolling with an initial set of topics
 puts "Give me a topic (in Primal hierarchical form - e.g. /adventure/hiking;france):"
 topic = gets().chomp()
-# Get a starting source
-source = getSourceFromUser()
 
 # Start the loop
 while true
   puts "Alright, let's do it..."
   # Get the filtered content from Primal
-  data = postAndFilter(topic, source)
+  data = postAndFilter(topic)
   # Show it to the user
   printResults(data)
   # Ask them which piece of content to look at
@@ -181,6 +164,5 @@ while true
   printSubjects(subjects)
   idx = getUserIndex("Which subject do you want to look into?", subjects.length)
   # Get the topic and the source and get ready to do it again!
-  topic = subjects[idx][:subject].gsub(%r{^https://.*?/.*?/}, '/')
-  source = getSourceFromUser()
+  topic = subjects[idx][:subject].gsub(%r{^https://.*?/}, '/')
 end

@@ -52,10 +52,10 @@ interestForFiltering = "/travel"
 # Expand around all of our topics, each in turn
 #
 interests.each { |topic|
-    puts "Expanding #{topic}..."
-    code, body = primal.postNewTopic("traveldemo", topic)
+    puts "Creating interests around #{topic}..."
+    code, body = primal.postNewTopic(topic)
     if code != 201
-        abort "Unable to expand topics around #{topic}.\n" +
+        abort "Unable to create interests around #{topic}.\n" +
               "Error #{code}, message: \"#{body}\""
     end
 }
@@ -65,8 +65,7 @@ interests.each { |topic|
 # some content that intersects with them
 #
 puts "Filtering content..."
-code, body = primal.filterContent("traveldemo", "@Everything",
-                                  interestForFiltering)
+code, body = primal.filterContent(interestForFiltering)
 
 # If successful
 if code == 200

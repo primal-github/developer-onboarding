@@ -27,12 +27,12 @@ $interests = [
 
 # Now we create interests using the POST command on each interest in turn
 $interests.each { |interest|
-  HTTParty.post("https://data.primal.com/user1234@Everything/#{interest}", headers)
+  HTTParty.post("https://data.primal.com#{interest}", headers)
 }
 
 # We can now filter News content through our interest network and retrieve the
 # result
-response = JSON.parse(HTTParty.get('https://data.primal.com/user1234@News/technology', headers).body)
+response = JSON.parse(HTTParty.get('https://data.primal.com/technology?status=complete&timeOut=300', headers).body)
 
 # Grab the array of content and pull the first subject out of the 'middle' one
 content = response['dc:collection']
@@ -40,7 +40,7 @@ subject = content[content.length / 2]['dc:subject'][0]
 
 # Go back into Primal and do the same thing we did before
 HTTParty.post(subject, headers)
-response = HTTParty.get(subject, headers)
+response = HTTParty.get("#{subject}?status=complete&timeOut=300", headers)
 
 # Just dump the JSON response to the standard output
 pp response

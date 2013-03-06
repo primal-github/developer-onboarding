@@ -24,8 +24,7 @@ primal = PrimalAccess.new("<your appId>", "<your appKey>",
 # the response payload.  We will not be retrieving any filtered
 # content at all.
 #
-code, body = primal.postThenFilter("traveldemo", "@Interests",
-                                   "/travel/adventure")
+code, body = primal.postThenFilter("/travel/adventure")
  
 #
 # Just show the topics of interest.

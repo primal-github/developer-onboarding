@@ -22,8 +22,7 @@ primal = PrimalAccess.new("<your appId>", "<your appKey>",
 # Call the convenience method that POSTs our topic to Primal and
 # then filters the content against the resulting interest network.
 #
-code, body = primal.postThenFilter("traveldemo", "@Everything",
-                                   "/travel/adventure")
+code, body = primal.postThenFilter("/travel/adventure")
  
 #
 # Our changes are here.  All we need to do is grab the dc:collection

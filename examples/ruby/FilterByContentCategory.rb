@@ -42,8 +42,7 @@ end
 # Call the convenience method that POSTs our topic to Primal and
 # then filters the content against the resulting interest network.
 #
-code, body = primal.postThenFilter("traveldemo", "@Everything",
-                                   "/travel/adventure")
+code, body = primal.postThenFilter("/travel/adventure")
  
 # If successful
 if code == 200

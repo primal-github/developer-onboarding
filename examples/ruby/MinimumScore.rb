@@ -28,8 +28,7 @@ primal = PrimalAccess.new("<your appId>", "<your appKey>",
 #
 #    https://data.primal.com/travel/adventure?minScore=0.7
 #
-code, body = primal.filterContent("traveldemo", "@Everything",
-                                  "/travel/adventure", {
+code, body = primal.filterContent("/travel/adventure", {
                                     :minScore => 0.7
                                   })
  
