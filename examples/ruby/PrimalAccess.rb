@@ -18,7 +18,7 @@ class PrimalAccess
   include HTTParty
   base_uri 'https://data.primal.com'
   # Uncomment this next line to see what HTTParty is doing
-  # debug_output $stderr
+  debug_output $stderr
 
   #
   # Constructor for the PrimalAccess class

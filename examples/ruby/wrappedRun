@@ -11,6 +11,10 @@ fi
 
 . ~/.example_code.env
 
+tmp=/tmp/dir.$$
+
+trap "cd /; rm -rf $tmp" EXIT
+
 script="$1"
 
 if [[ -z "$script" ]]; then
@@ -21,10 +25,16 @@ elif [[ ! -x "$script" ]]; then
     exit 1
 fi
 
+mkdir -p $tmp
+cp -r *.rb $tmp
+cd $tmp
+
 e=executable.$$
+
+sed -e "s!https://data.primal.com!$dataServiceURL!" PrimalAccess.rb > t; mv t PrimalAccess.rb
 sed -e "s/<your appId>/$myAppId/" \
     -e "s/<your appKey>/$myAppKey/" \
     -e "s/<your username>/$myUsername/" \
-    -e "s/<your password>/$myPassword/" "$script" > $e
+    -e "s/<your password>/$myPassword/" \
+    -e "s!https://data.primal.com!$dataServiceURL!" "$script" > $e
 ruby $e
-rm -f $e
