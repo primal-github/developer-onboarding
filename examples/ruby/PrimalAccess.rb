@@ -3,12 +3,14 @@
 # We need to use some ruby gems
 require 'rubygems'
 
-# We require the httparty gem
+# We require these gems
 #
-# To install it:
+# To install them:
 #   gem install httparty
+#   gem install json
 #
 require 'httparty'
+require 'json'
 
 #
 # The PrimalAccess class abstracts the access to Primal such
@@ -19,6 +21,8 @@ class PrimalAccess
   base_uri 'https://data.primal.com'
   # Uncomment this next line to see what HTTParty is doing
   # debug_output $stderr
+  # Set this to false in order to turn off debugging of this class
+  @@debugMe = true
 
   #
   # Constructor for the PrimalAccess class
@@ -56,7 +60,10 @@ class PrimalAccess
     code = 400
     body = ''
     while (count < 5)
-      response = self.class.post("/#{topic}", @headers)
+      if @@debugMe
+        $stderr.puts "POSTing to #{topic}"
+      end
+      response = self.class.post("#{topic}", @headers)
       code = response.code
       body = response.body
       #
@@ -65,21 +72,30 @@ class PrimalAccess
       # 403 - application not authorized to use Primal
       #
       if code >= 400 && code <= 403
+        if @@debugMe
+          $stderr.puts "POST received a #{code}"
+        end
         break
       #
       # 429 - application has reached its request limit for the moment
       #
       elsif code == 429
         # Sleep for 10 seconds
+        if @@debugMe
+          $stderr.puts "Got a 429.  Waiting (#{count})."
+        end
         sleep 10
         count += 1
       #
-      # 200 - success
+      # 201 - success
       #
       elsif code == 201
+        if @@debugMe
+          $stderr.puts "POST successful"
+        end
         break
       else
-        abort "Received unexpected response code (#{code}) for POST /#{topic}"
+        abort "Received unexpected response code (#{code}) for POST #{uri}"
       end
     end
     return code, body
@@ -108,8 +124,12 @@ class PrimalAccess
       :status => 'complete',
       :timeOut => 300 }.merge(opts)
     })
-    while (count < 5)
-      response = self.class.get("/#{topic}", options)
+    options = @headers.merge({ :query => opts })
+    while (count < 10)
+      if @@debugMe
+        $stderr.puts "GETting #{topic}"
+      end
+      response = self.class.get("#{topic}", options)
       code = response.code
       body = response.body
       #
@@ -119,21 +139,34 @@ class PrimalAccess
       # 404 - interest network not found
       #
       if code >= 400 && code <= 404
+        if @@debugMe
+          $stderr.puts "GET received a #{code}"
+        end
         break
       #
       # 429 - application has reached its request limit for the moment
       #
       elsif code == 429
+        if @@debugMe
+          $stderr.puts "Got a 429.  Waiting (#{count})."
+        end
         # Sleep for 10 seconds
         sleep 10
-        count += 1
+        # We don't allow as many retries when we might be throttled
+        count += 2
       #
       # 200 - success
       #
       elsif code == 200
+        if @@debugMe
+          $stderr.puts "Results are complete"
+        end
         break
+      #
+      # We don't know what happened but it can't be good
+      #
       else
-        abort "Received unexpected response code (#{code}) for GET /#{topic}"
+        abort "Received unexpected response code (#{code}) for GET #{topic}"
       end
     end
     return code, body

@@ -16,11 +16,11 @@ $primal = PrimalAccess.new("<your appId>", "<your appKey>",
                           "<your username>", "<your password>")
  
 # 
-# Returns an unordered list of the matched topics and their URL
-# identifiers back in to Primal.
+# Returns an unordered list of the matched topics and their URL identifiers back
+# in to Primal.
 # 
 # dcCollectionEntry - The JSON object pulled from the dc:collection.
-#   skosCollection - The JSON object represented by
+# skosCollection - The JSON object represented by
 #   skos:ConceptScheme/skos:Collection.
 # Returns a list dictionaries with :subject and :prefLabel as entries.
 # 
@@ -45,8 +45,7 @@ end
  
 #
 # We're looking to process the JSON response into a new data structure that can
-# be used to present information to the user.  We're not just going to print it
-# out, but create something that we can manipulate easier later.
+# be used to present information to the user.
 #
 def processJSON(json)
   # Grab the array from dc:collection
@@ -68,12 +67,12 @@ def processJSON(json)
 end
  
 #
-# We do an expansion of a given topic and a filtering of that topic against a
-# given source in this one function.  The returned data is exactly what was
-# returned from processJSON()
+# We first create an interest network around a given topic and then filter the
+# the given source of content through that resulting network in this one
+# function.  The returned data is exactly what was returned from processJSON()
 #
 def postAndFilter(topic)
-  print "Expanding #{topic}..."
+  print "Creating interests around #{topic}..."
   STDOUT.flush
   code, body = $primal.postNewTopic(topic)
   # If successful
@@ -92,7 +91,7 @@ def postAndFilter(topic)
       abort "Filtering request failed (#{code}). Message: #{body}"
     end
   else
-    abort "Expansion request failed (#{code}). Message: #{body}"
+    abort "Creation request failed (#{code}). Message: #{body}"
   end
 end
 
@@ -153,16 +152,21 @@ topic = gets().chomp()
 # Start the loop
 while true
   puts "Alright, let's do it..."
+
   # Get the filtered content from Primal
   data = postAndFilter(topic)
+
   # Show it to the user
   printResults(data)
+
   # Ask them which piece of content to look at
   idx = getUserIndex("Which content number do you want to look into?", data.length)
+
   # Get the subject to feed back into primal
   subjects = data[idx][:subjects]
   printSubjects(subjects)
   idx = getUserIndex("Which subject do you want to look into?", subjects.length)
+
   # Get the topic and the source and get ready to do it again!
   topic = subjects[idx][:subject].gsub(%r{^https://.*?/}, '/')
 end

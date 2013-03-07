@@ -19,11 +19,10 @@ primal = PrimalAccess.new("<your appId>", "<your appKey>",
                           "<your username>", "<your password>")
  
 #
-# We're going to use the special last parameter in the filterContent
-# call that allows us to specify parameters that will go into the
-# query of the GET call.  By adding 'maxContentCount=207' in the
-# query parameter of the URL, we direct the data service to return
-# no more than 20 items to us
+# We're going to use the special last parameter in the filterContent call that
+# allows us to specify parameters that will go into the query of the GET call.
+# By adding 'maxContentCount=20' in the query parameter of the URL, we direct
+# the data service to return no more than 20 items to us
 #
 #   https://data.primal.com/travel/adventure?maxContentCount=20
 #

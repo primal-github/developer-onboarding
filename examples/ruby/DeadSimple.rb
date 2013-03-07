@@ -11,11 +11,12 @@ headers = {
   :basic_auth => { :username => '<your username>', :password => '<your password>' },
   :headers => {
     'Primal-App-ID' => '<your appId>',
-    'Primal-App-Key' => '<your appKey>'
+    'Primal-App-Key' => '<your appKey>',
+    'Primal-Version' => 'latest'
   }
 }
 
-# To bootstrap the example, we're going to use this array to hold the list of 
+# To bootstrap the example, we're going to use this array to hold the list of
 # interests that would normally come from some outside source; e.g. user input,
 # information extracted from a website or document abstract, etc...
 $interests = [
@@ -25,8 +26,9 @@ $interests = [
     '/technology/Google;laptop'
 ]
 
-# Now we create interests using the POST command on each interest in turn
+# Now we create interests using the POST command on each topic in turn
 $interests.each { |interest|
+  $stderr.puts "POSTing to #{interest}"
   HTTParty.post("https://data.primal.com#{interest}", headers)
 }
 
@@ -39,6 +41,7 @@ content = response['dc:collection']
 subject = content[content.length / 2]['dc:subject'][0]
 
 # Go back into Primal and do the same thing we did before
+$stderr.puts "POSTting to #{subject}"
 HTTParty.post(subject, headers)
 response = HTTParty.get("#{subject}?status=complete&timeOut=300", headers)
 

@@ -19,20 +19,21 @@ primal = PrimalAccess.new("<your appId>", "<your appKey>",
                           "<your username>", "<your password>")
  
 #
-# Call the convenience method that POSTs our topic to Primal and
-# then filters the content against the resulting interest network.
+# Call the convenience method that POSTs our topic to Primal and then filters
+# the content against the resulting interest network.
 #
 code, body = primal.postThenFilter("/travel/adventure")
  
 # 
-# Returns an unordered list of the matched topics and their URL
-# identifiers back in to Primal.
+# Returns an unordered list of the matched topics and their URL identifiers back
+# in to Primal.
 # 
 # dcCollectionEntry - The JSON object pulled from the dc:collection.
-#   topicsJson - The JSON object represented by
+# topicsJson - The JSON object represented by
 #   skos:ConceptScheme/skos:Collection.
-# Returns the unordered list of matched topics or the empty string
-#   if no topics can be found.
+#
+# Returns the unordered list of matched topics or the empty string if no topics
+# can be found.
 # 
 def getSubjectTags(dcCollectionEntry, topicsJson)
   # Get the subjects from the dcCollectionEntry
@@ -53,10 +54,10 @@ def getSubjectTags(dcCollectionEntry, topicsJson)
 end
  
 #
-# Again, this is where to find the bulk of our changes.  We need to
-# grab the dc:collection block as well as the skos:Collection block
-# from the skos:ConceptScheme.  These give us enough data to extract
-# the needed bits and pieces of each entry in the dc:collection.
+# Again, this is where to find the bulk of our changes.  We need to grab the
+# dc:collection block as well as the skos:Collection block from the
+# skos:ConceptScheme.  These give us enough data to extract the needed bits and
+# pieces of each entry in the dc:collection.
 #
 def processJSON(json)
   # Extract the dc:collection array

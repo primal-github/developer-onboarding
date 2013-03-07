@@ -19,22 +19,21 @@ primal = PrimalAccess.new("<your appId>", "<your appKey>",
                           "<your username>", "<your password>")
  
 #
-# Call the convenience method that POSTs our topic to Primal and
-# then filters the content against the resulting interest network.
-#
-code, body = primal.postThenFilter("/travel/adventure")
- 
-#
-# We've made this a separate function because it's going to be
-# what we're going to be modifying most often.  The data service
-# will return to us, a JSON payload as a regular order of 
-# business.  What's going to change is how we manipulate that
-# result.  For now, we're starting small
+# We've made this a separate function because it's going to be what we're going
+# to be modifying most often.  The data service will return to us a JSON payload
+# as a regular order of business.  What's going to change is how we manipulate
+# that result.  This example does very little.
 #
 def processJSON(json)
   # "Pretty Print" the JSON response
   pp json
 end
+ 
+#
+# Call the convenience method that POSTs our topic to Primal and then filters
+# the default content against the resulting interest network.
+#
+code, body = primal.postThenFilter("/travel/adventure")
  
 # If successful
 if code == 200

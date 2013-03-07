@@ -19,22 +19,23 @@ primal = PrimalAccess.new("<your appId>", "<your appKey>",
                           "<your username>", "<your password>")
  
 #
-# Call the convenience method that POSTs our topic to Primal and
-# then filters the content against the resulting interest network.
+# Call the convenience method that POSTs our topic to Primal and then filters
+# the content against the resulting interest network.
 #
 code, body = primal.postThenFilter("/travel/adventure")
  
 #
-# Our changes are here.  All we need to do is grab the dc:collection
-# block from the JSON response and transform it to a collection of
-# strings that contain the information we care about.
+# Our changes are here.  All we need to do is grab the dc:collection block from
+# the JSON response and transform it to a collection of strings that contain the
+# information we care about.
 #
 def processJSON(json)
   # Grab the array from dc:collection
   collection = json['dc:collection']
   # Convert that array to an array of strings
   data = collection.collect { |dict|
-    "title: #{dict['dc:title']}\nlink: #{dict['dc:identifier']}\n\n"
+    "title: #{dict['dc:title']}\n" +
+    "link: #{dict['dc:identifier']}\n\n"
   }
   puts data
 end
