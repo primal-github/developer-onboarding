@@ -46,6 +46,16 @@ class PrimalAccess
   end
 
   #
+  # Sometimes we're going to get topics that are complex (i.e. they contain a
+  # scheme and host) and we want to simplify those.  Because we're not making
+  # calls with bare URLs but have told HTTParty what the base_uri is, we need to
+  # pull that base uri off of the topic, should it be there.
+  #
+  def extractJustTopic(topic)
+    topic.sub(%r{https://.*?/}, '/')
+  end
+
+  #
   # POSTs a new topic to Primal in order to seed that topic.
   #
   # The 'topic' parameter will be used to construct a POST URL
@@ -56,6 +66,7 @@ class PrimalAccess
   # an error.
   #
   def postNewTopic(topic)
+    topic = extractJustTopic(topic)
     count = 0
     code = 400
     body = ''
@@ -117,14 +128,15 @@ class PrimalAccess
   # will be the JSON payload of the filtered content.
   #
   def filterContent(topic, opts = {})
+    topic = extractJustTopic(topic)
     count = 0
     code = 400
     body = ''
     options = @headers.merge({ :query => {
-      :status => 'complete',
-      :timeOut => 300 }.merge(opts)
+        :status => 'complete',
+        :timeOut => 300
+      }.merge(opts)
     })
-    options = @headers.merge({ :query => opts })
     while (count < 10)
       if @@debugMe
         $stderr.puts "GETting #{topic}"
