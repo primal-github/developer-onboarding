@@ -19,9 +19,9 @@ primal = PrimalAccess.new("<your appId>", "<your appKey>",
                           "<your username>", "<your password>")
  
 #
-# We're not going to do anything special here.  You know how to
-# manipulate the results to get some bits and pieces of information that
-# are important to you, so let's just fly past this right now.
+# We're not going to do anything special here.  You know how to manipulate the
+# results to get some bits and pieces of information that are important to you,
+# so let's just fly past this right now.
 #
 def processJSON(json)
   # "Pretty Print" the JSON response
@@ -29,9 +29,9 @@ def processJSON(json)
 end
  
 #
-# Here we're going to be creating a large graph of interests that descend
-# from 'travel'.  The graph of interests that Primal is going to create
-# will be extreme indeed!
+# Here we're going to be creating a large graph of interests that descend from
+# 'travel'.  The graph of interests that Primal is going to create will be
+# extreme indeed!
 #
 interests = [
     '/travel/canada/north/adventure/skiing;hiking;climbing;sledding',
@@ -42,26 +42,26 @@ interests = [
 ]
 
 # 
-# Now we're going to use the head topic of our interest network for
-# filtering purposes.  The graph Primal has created is going to used
-# to forumlate the terms we use for filtering.
+# Now we're going to use the head topic of our interest network for filtering
+# purposes.  The graph Primal has created is going to used to forumlate the
+# terms we use for filtering.
 #
 interestForFiltering = "/travel"
  
 #
-# Expand around all of our topics, each in turn
+# Create interests around all of our topics, each in turn
 #
 interests.each { |topic|
-    puts "Expanding #{topic}..."
+    puts "Creating interests around #{topic}..."
     code, body = primal.postNewTopic("traveldemo", topic)
     if code != 201
-        abort "Unable to expand topics around #{topic}.\n" +
+        abort "Unable to create interests around #{topic}.\n" +
               "Error #{code}, message: \"#{body}\""
     end
 }
 
 #
-# Now that the interests have been expanded, lets use them to grab
+# Now that the interests have been created, lets use them to grab
 # some content that intersects with them
 #
 puts "Filtering content..."

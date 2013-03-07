@@ -107,10 +107,10 @@ def filterBySource(source)
 end
 
 #
-# Expand around all of our topics, each in turn
+# Create interests around all of our topics, each in turn
 #
 $interests.each { |topic|
-    puts "Expanding #{topic}..."
+    puts "Creating interests around #{topic}..."
     code, body = $primal.postNewTopic("techdemo", topic)
     if code != 201
         abort "Unable to expand topics around #{topic}.\n" +

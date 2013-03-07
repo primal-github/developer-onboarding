@@ -19,12 +19,11 @@ primal = PrimalAccess.new("<your appId>", "<your appKey>",
                           "<your username>", "<your password>")
  
 #
-# We're going to use the special last parameter in the filterContent
-# call that allows us to specify parameters that will go into the
-# query of the GET call.  By adding 'minScore=0.7' in the query
-# parameter of the URL, we direct the data service to return
-# content to us that scores 0.7 or better.  The resulting URL will
-# look something like this:
+# We're going to use the special last parameter in the filterContent call that
+# allows us to specify parameters that will go into the query of the GET call.
+# By adding 'minScore=0.7' in the query parameter of the URL, we direct the data
+# service to return content to us that scores 0.7 or better.  The resulting URL
+# will look something like this:
 #
 #    https://data.primal.com/travel/adventure?minScore=0.7
 #
@@ -34,11 +33,9 @@ code, body = primal.filterContent("traveldemo", "@Everything",
                                   })
  
 #
-# We've made this a separate function because it's going to be
-# what we're going to be modifying most often.  The data service
-# will return to us, a JSON payload as a regular order of 
-# business.  What's going to change is how we manipulate that
-# result.  For now, we're starting small
+# We use the processJSON() function as we have in other examples to process the
+# results from the GET.  This just extracts what we need and displays it without
+# all of the extra noise from the JSON response.
 #
 def processJSON(json)
   # Let's just print out titles, links and scores
