@@ -123,7 +123,8 @@ class PrimalAccess
   # e.g. 
   #   { :"primal:contentScore:min" => 0.7 }
   #   { :"primal:contentCount:max" => 5 }
-  #   { :contentSource => MyDataSource|PrimalSource }
+  #   { :contentSource => MyDataSource } ... or ...
+  #   { :contentSource => PrimalSource }
   #
   # Returns two values: the response code, and the body.
   # If successful (i.e. a response code of 200) then the body
