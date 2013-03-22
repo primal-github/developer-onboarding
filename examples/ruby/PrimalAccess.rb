@@ -35,8 +35,7 @@ class PrimalAccess
     @headers = {
       :headers => {
         'Primal-App-ID' => appId,
-        'Primal-App-Key' => appKey,
-        'Primal-Version' => 'latest',
+        'Primal-App-Key' => appKey
       },
       :basic_auth => {
         :username => username,
@@ -121,7 +120,10 @@ class PrimalAccess
   #
   # You can pass a dictionary of optional arguments that will
   # be merged in to the query parameters, if you wish.
-  # e.g. { :minScore => 0.7 } or { :source => MyDataSource }
+  # e.g. 
+  #   { :"primal:contentScore:min" => 0.7 }
+  #   { :"primal:contentCount:max" => 5 }
+  #   { :contentSource => MyDataSource|PrimalSource }
   #
   # Returns two values: the response code, and the body.
   # If successful (i.e. a response code of 200) then the body
@@ -133,8 +135,7 @@ class PrimalAccess
     code = 400
     body = ''
     options = @headers.merge({ :query => {
-        :status => 'complete',
-        :timeOut => 300
+        :timeOut => 'max'
       }.merge(opts)
     })
     while (count < 10)
@@ -148,7 +149,7 @@ class PrimalAccess
       # 400 - bad request
       # 401 - application not authorized to access the user's account
       # 403 - application not authorized to use Primal
-      # 404 - interest network not found
+      # 404 - object not found
       #
       if code >= 400 && code <= 404
         if @@debugMe

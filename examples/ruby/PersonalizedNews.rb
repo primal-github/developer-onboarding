@@ -33,7 +33,9 @@ $interests.each { |interest|
 
 # News content can now be filtered through our interest network
 # (assumes the default content source is News)
-code, body = $primal.filterContent("/technology")
+code, body = $primal.filterContent("/technology", {
+                                    :contentSource => "PrimalSources/News"
+                                  })
 response = JSON.parse(body)
 
 # Just print out the titles for fun
@@ -45,11 +47,11 @@ response['dc:collection'].each { |dict| puts dict['dc:title'] }
 # of subjects from the first piece of content might look like:
 #
 #  "dc:subject": [
-#    "https://data.primal.com/user1234@News/technology/mobile+broadband",
-#    "https://data.primal.com/user1234@News/technology/mobile+telephony",
-#    "https://data.primal.com/user1234@News/technology/internet",
-#    "https://data.primal.com/user1234@News/technology/communications",
-#    "https://data.primal.com/user1234@News/technology"
+#    "https://data.primal.com/technology/mobile+broadband",
+#    "https://data.primal.com/technology/mobile+telephony",
+#    "https://data.primal.com/technology/internet",
+#    "https://data.primal.com/technology/communications",
+#    "https://data.primal.com/technology"
 #  ]
 #
 # One could easily envision a user selecting a piece of content from which you

@@ -21,13 +21,13 @@ primal = PrimalAccess.new("<your appId>", "<your appKey>",
 #
 # We're going to use the special last parameter in the filterContent call that
 # allows us to specify parameters that will go into the query of the GET call.
-# By adding 'maxContentCount=20' in the query parameter of the URL, we direct
+# By adding 'primal:contentCount:max=20' in the query parameter of the URL, we direct
 # the data service to return no more than 20 items to us
 #
-#   https://data.primal.com/travel/adventure?maxContentCount=20
+#   https://data.primal.com/travel/adventure?primal:contentCount:max=20
 #
 code, body = primal.filterContent("/travel/adventure", {
-                                    :maxContentCount => 20
+                                    :"primal:contentCount:max" => 20
                                   })
  
 #
@@ -44,7 +44,7 @@ def processJSON(json)
     count += 1
     "index: #{count}\n" +
     "title: #{dict['dc:title']}\n" +
-    "link: #{dict['dc:identifier']}\n" +
+    "link: #{dict['dc:relation']}\n" +
     "score: #{dict['primal:contentScore']}\n\n"
   }.each { |result|
     puts result

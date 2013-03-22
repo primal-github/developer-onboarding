@@ -21,14 +21,14 @@ primal = PrimalAccess.new("<your appId>", "<your appKey>",
 #
 # We're going to use the special last parameter in the filterContent call that
 # allows us to specify parameters that will go into the query of the GET call.
-# By adding 'minScore=0.7' in the query parameter of the URL, we direct the data
+# By adding 'primal:contentScore:min=0.7' in the query parameter of the URL, we direct the data
 # service to return content to us that scores 0.7 or better.  The resulting URL
 # will look something like this:
 #
-#    https://data.primal.com/travel/adventure?minScore=0.7
+#    https://data.primal.com/travel/adventure?primal:contentScore:min=0.7
 #
 code, body = primal.filterContent("/travel/adventure", {
-                                    :minScore => 0.7
+                                    :"primal:contentScore:min" => 0.7
                                   })
  
 #
@@ -40,7 +40,7 @@ def processJSON(json)
   # Let's just print out titles, links and scores
   json['dc:collection'].collect { |dict|
     "title: #{dict['dc:title']}\n" +
-    "link: #{dict['dc:identifier']}\n" +
+    "link: #{dict['dc:relation']}\n" +
     "score: #{dict['primal:contentScore']}\n\n"
   }.each { |result|
     puts result

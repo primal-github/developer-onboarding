@@ -20,17 +20,17 @@ primal = PrimalAccess.new("<your appId>", "<your appKey>",
  
 #
 # Here's the important bit.  We're going to parse the JSON response and accept
-# only those entries in the dc:collection whose dc:type value is "Web"
+# only those entries in the dc:collection whose dc:type value is "WebPage"
 #
 def processJSON(json)
   collection = json['dc:collection']
-  # Select only those entries for which the dc:type is "Web" and then transform
+  # Select only those entries for which the dc:type is "WebPage" and then transform
   # them into strings that look pretty
   results = collection.select { |dict|
-    dict['dc:type'] == "Web"
+    dict['dc:type'] == "WebPage"
   }.collect { |dict|
     "title: #{dict['dc:title']}\n" +
-    "link: #{dict['dc:identifier']}\n" +
+    "link: #{dict['dc:relation']}\n" +
     "source: #{dict['dc:type']}\n\n"
   }.each { |result|
     puts result

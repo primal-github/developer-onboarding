@@ -58,7 +58,7 @@ def processJSON(json)
     {
       :score => dict['primal:contentScore'],
       :title => dict['dc:title'],
-      :link => dict['dc:identifier'],
+      :link => dict['dc:relation'],
       :subjects => getSubjectTags(dict, skosCollection)
     }
   }.reverse # orders it by reverse score so that the best stuff is at the

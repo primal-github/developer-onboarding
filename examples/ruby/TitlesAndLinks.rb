@@ -35,7 +35,7 @@ def processJSON(json)
   # Convert that array to an array of strings
   data = collection.collect { |dict|
     "title: #{dict['dc:title']}\n" +
-    "link: #{dict['dc:identifier']}\n\n"
+    "link: #{dict['dc:relation']}\n\n"
   }
   puts data
 end

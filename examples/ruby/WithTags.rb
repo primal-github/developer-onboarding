@@ -70,7 +70,7 @@ def processJSON(json)
     # Extract our needed information from the dictionary
     score = dict['primal:contentScore']
     title = dict['dc:title']
-    link = dict['dc:identifier']
+    link = dict['dc:relation']
  
     # Generated a list of tag names that matched the content
     tagNames = getSubjectTags(dict, skosCollection)
