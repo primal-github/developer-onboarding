@@ -21,8 +21,11 @@ while true
   # Display it
   if primalRequest != nil
     puts
-    puts "Your interests can be found at:"
+    puts "Your interests can be found in the Primal web app at:"
     puts "  http://primal.com#{primalRequest}"
+    puts
+    puts "Or you can POST the topic to Primal's data service with:"
+    puts "  POST http://data.primal.com#{primalRequest}"
     puts
   end
 end
