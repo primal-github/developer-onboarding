@@ -36,5 +36,7 @@ sed -e "s/<your appId>/$myAppId/" \
     -e "s/<your appKey>/$myAppKey/" \
     -e "s/<your username>/$myUsername/" \
     -e "s/<your password>/$myPassword/" \
+    -e "s/<your password>/$myPassword/" \
+    -e "s/<alchemy api key here>/$myAlchemyKey/" \
     -e "s!https://data.primal.com!$dataServiceURL!" "$script" > $e
 ruby $e
