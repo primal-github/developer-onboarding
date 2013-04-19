@@ -27,14 +27,19 @@ $interests = [
 ]
 
 # Now we create interests using the POST command on each topic in turn
+# In order to keep our concerns separated, we're going to model a "user" with a
+# specifici storage location for the interest network in Primal.
 $interests.each { |interest|
-  $primal.postNewTopic(interest)
+  $primal.postNewTopic(interest, {
+    :storage => "user1234"
+  })
 }
 
 # News content can now be filtered through our interest network
 # (assumes the default content source is News)
 code, body = $primal.filterContent("/technology", {
-                                    :contentSource => "PrimalSources/News"
+                                    :contentSource => "PrimalSources/News",
+                                    :storage => "user1234"
                                   })
 response = JSON.parse(body)
 
@@ -60,7 +65,9 @@ response['dc:collection'].each { |dict| puts dict['dc:title'] }
 # We're just going to POST them all back in.
 #
 response['dc:collection'][0]['dc:subject'].each { |subject|
-  $primal.postNewTopic(subject)
+  $primal.postNewTopic(subject, {
+    :storage => "user1234"
+  })
 }
 
 # And so on...

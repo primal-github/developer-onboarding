@@ -64,16 +64,17 @@ class PrimalAccess
   # Anything but a response code of 201 is to be considered
   # an error.
   #
-  def postNewTopic(topic)
+  def postNewTopic(topic, opts = {})
     topic = extractJustTopic(topic)
     count = 0
     code = 400
     body = ''
+    options = @headers.merge(opts)
     while (count < 5)
       if @@debugMe
         $stderr.puts "POSTing to #{topic}"
       end
-      response = self.class.post("#{topic}", @headers)
+      response = self.class.post("#{topic}", options)
       code = response.code
       body = response.body
       #
