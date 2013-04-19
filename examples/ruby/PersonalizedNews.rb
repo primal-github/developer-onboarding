@@ -30,9 +30,7 @@ $interests = [
 # In order to keep our concerns separated, we're going to model a "user" with a
 # specifici storage location for the interest network in Primal.
 $interests.each { |interest|
-  $primal.postNewTopic(interest, {
-    :storage => "user1234"
-  })
+  $primal.postNewTopic(interest, { :storage => "user1234" })
 }
 
 # News content can now be filtered through our interest network
